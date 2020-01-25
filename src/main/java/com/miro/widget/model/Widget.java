@@ -1,14 +1,15 @@
 package com.miro.widget.model;
 
+import java.awt.geom.Point2D;
 import java.sql.Timestamp;
 
 public class Widget {
 
     private Long id;
-    private Coordinate coordinate;
-    private int zIndex;
-    private double width;
-    private double height;
+    private Point2D.Double coordinates;
+    private Integer zIndex;
+    private Double width;
+    private Double height;
     private Timestamp timestamp;
 
     public Widget() {
@@ -22,35 +23,35 @@ public class Widget {
         this.id = id;
     }
 
-    public Coordinate getCoordinate() {
-        return coordinate;
+    public Point2D.Double getCoordinates() {
+        return coordinates;
     }
 
-    public void setCoordinate(Coordinate coordinate) {
-        this.coordinate = coordinate;
+    public void setCoordinates(Point2D.Double coordinates) {
+        this.coordinates = coordinates;
     }
 
-    public int getzIndex() {
+    public Integer getzIndex() {
         return zIndex;
     }
 
-    public void setzIndex(int zIndex) {
+    public void setzIndex(Integer zIndex) {
         this.zIndex = zIndex;
     }
 
-    public double getWidth() {
+    public Double getWidth() {
         return width;
     }
 
-    public void setWidth(double width) {
+    public void setWidth(Double width) {
         this.width = width;
     }
 
-    public double getHeight() {
+    public Double getHeight() {
         return height;
     }
 
-    public void setHeight(double height) {
+    public void setHeight(Double height) {
         this.height = height;
     }
 
@@ -60,5 +61,9 @@ public class Widget {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public void increaseZIndex() {
+        this.zIndex++;
     }
 }
