@@ -4,18 +4,25 @@ import com.miro.widget.model.Widget;
 import com.miro.widget.exception.WidgetNotFoundException;
 import com.miro.widget.services.WidgetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Optional;
 
 
 @RestController
 @RequestMapping(value = "/widgets", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+@Validated
 public class WidgetController {
 
     private final WidgetService widgetService;
@@ -42,10 +49,13 @@ public class WidgetController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Widget>> getWidgets() {
-        List<Widget> widgets = widgetService.getWidgets();
-        return new ResponseEntity(widgets, HttpStatus.OK);
+    @GetMapping()
+    public ResponseEntity<Page<Widget>> getWidgets(
+            @RequestParam(required = false, defaultValue ="1") @Min(value = 1, message = "page number should be positive") Integer page,
+            @RequestParam(required = false, defaultValue = "10") @Max(value = 500, message = "size should be less than or equal to 500") Integer size) {
+
+        Page<Widget> pageWidgets = widgetService.getWidgets(PageRequest.of(page - 1, size));
+        return new ResponseEntity(pageWidgets, HttpStatus.OK);
     }
 
 
@@ -66,6 +76,19 @@ public class WidgetController {
     public ResponseEntity deleteWidget(@PathVariable Long id){
         widgetService.deleteWidget(id);
         return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @ExceptionHandler(value = {ConstraintViolationException.class})
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleValidationFailure(ConstraintViolationException ex) {
+        StringBuilder messages = new StringBuilder();
+
+        for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+            messages.append(violation.getMessage());
+            messages.append("\n");
+        }
+
+        return ResponseEntity.badRequest().body(messages.toString());
     }
 
 

@@ -6,8 +6,13 @@ import com.miro.widget.repository.WidgetCrudRepository;
 
 import com.miro.widget.utils.NullAwareBeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,8 +38,22 @@ public class WidgetService {
         widgetRepository.delete(id);
     }
 
-    public List<Widget> getWidgets() {
-        return widgetRepository.getWidgets();
+    public Page<Widget> getWidgets(Pageable pageable) {
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<Widget> widgets = widgetRepository.getWidgets();
+        List<Widget> result;
+        if (widgets.size() < startItem) {
+            result = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, widgets.size());
+            result = widgets.subList(startItem, toIndex);
+        }
+
+        Page<Widget> widgetPage = new PageImpl(result, PageRequest.of(currentPage, pageSize), widgets.size());
+
+        return widgetPage;
     }
 
     public Widget updateWidget(Long id, Widget widget) throws WidgetNotFoundException {
