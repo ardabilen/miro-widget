@@ -46,8 +46,9 @@ public class WidgetLinkedHashMap {
                 current = putAfter(entry, widget);
             }
         }
-        // Since zIndex is null the widget moves to the foreground
-        // zIndex will be equal to maxZIndex + 1 or if it is first widget will be equal to 0
+        // when zIndex is not specified it should moves to the foreground
+        // when it is the case, I assume that zIndex should be equal to highest zIndex + 1
+        // if there is no highest zIndex, then it will be equal to 0;
         else{
             if(tail.prev.value != null){
                 widget.setzIndex(tail.prev.value.getzIndex() + 1);
