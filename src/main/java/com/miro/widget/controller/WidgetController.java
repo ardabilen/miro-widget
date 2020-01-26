@@ -27,17 +27,34 @@ public class WidgetController {
 
     private final WidgetService widgetService;
 
+    /**
+     * Instantiates a new Widget controller.
+     *
+     * @param widgetService the widget service
+     */
     @Autowired
     public WidgetController(WidgetService widgetService) {
         this.widgetService = widgetService;
     }
 
+    /**
+     * Create widget response entity.
+     *
+     * @param widget the widget
+     * @return the response entity
+     */
     @PostMapping
     public ResponseEntity<Widget> createWidget(@RequestBody Widget widget) {
         Widget created = widgetService.createWidget(widget);
         return new ResponseEntity(created, HttpStatus.CREATED);
     }
 
+    /**
+     * Gets widget by id.
+     *
+     * @param id the id
+     * @return the widget by id
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Widget> getWidgetById(@PathVariable Long id) {
         Optional<Widget> widget = widgetService.getWidgetById(id);
@@ -49,6 +66,13 @@ public class WidgetController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Gets widgets.
+     *
+     * @param page the page
+     * @param size the size
+     * @return the widgets
+     */
     @GetMapping()
     public ResponseEntity<Page<Widget>> getWidgets(
             @RequestParam(required = false, defaultValue ="1") @Min(value = 1, message = "page number should be positive") Integer page,
@@ -59,6 +83,13 @@ public class WidgetController {
     }
 
 
+    /**
+     * Update widget response entity.
+     *
+     * @param widget the widget
+     * @param id     the id
+     * @return the response entity
+     */
     @PatchMapping("/{id}")
     public ResponseEntity<Widget> updateWidget(@RequestBody Widget widget, @PathVariable Long id) {
 
@@ -72,12 +103,24 @@ public class WidgetController {
     }
 
 
+    /**
+     * Delete widget response entity.
+     *
+     * @param id the id
+     * @return the response entity
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity deleteWidget(@PathVariable Long id){
         widgetService.deleteWidget(id);
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    /**
+     * Handle validation failure response entity.
+     *
+     * @param ex the ex
+     * @return the response entity
+     */
     @ExceptionHandler(value = {ConstraintViolationException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleValidationFailure(ConstraintViolationException ex) {

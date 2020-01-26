@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -21,23 +22,52 @@ public class WidgetService {
 
     private WidgetCrudRepository widgetRepository;
 
+    /**
+     * Instantiates a new Widget service.
+     *
+     * @param widgetCrudRepository the widget crud repository
+     */
     @Autowired
     public WidgetService(WidgetCrudRepository widgetCrudRepository) {
         this.widgetRepository = widgetCrudRepository;
     }
 
+    /**
+     * Create widget widget.
+     *
+     * @param widget the widget
+     * @return the widget
+     */
     public Widget createWidget(Widget widget) {
+        widget.setTimestamp(new Timestamp(System.currentTimeMillis()));
         return widgetRepository.create(widget);
     }
 
+    /**
+     * Gets widget by id.
+     *
+     * @param id the id
+     * @return the widget by id
+     */
     public Optional<Widget> getWidgetById(Long id) {
         return Optional.ofNullable(widgetRepository.getById(id));
     }
 
+    /**
+     * Delete widget.
+     *
+     * @param id the id
+     */
     public void deleteWidget(Long id) {
         widgetRepository.delete(id);
     }
 
+    /**
+     * Gets widgets.
+     *
+     * @param pageable the pageable
+     * @return the widgets
+     */
     public Page<Widget> getWidgets(Pageable pageable) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
@@ -56,6 +86,14 @@ public class WidgetService {
         return widgetPage;
     }
 
+    /**
+     * Update widget widget.
+     *
+     * @param id     the id
+     * @param widget the widget
+     * @return the widget
+     * @throws WidgetNotFoundException the widget not found exception
+     */
     public Widget updateWidget(Long id, Widget widget) throws WidgetNotFoundException {
         Widget widgetToUpdated = widgetRepository.getById(id);
         if(widgetToUpdated == null)
@@ -63,6 +101,8 @@ public class WidgetService {
 
         // do not allow to change Id
         widget.setId(null);
+        // update timestamp
+        widget.setTimestamp(new Timestamp(System.currentTimeMillis()));
 
         //first remove it from repository, then update non null properties and add it to the repository again with same id.
         widgetRepository.delete(id);

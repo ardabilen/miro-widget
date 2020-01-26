@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The type Widget linked hash map.
+ */
 public class WidgetLinkedHashMap {
 
 
@@ -14,6 +17,9 @@ public class WidgetLinkedHashMap {
     private WidgetEntry head, tail;
 
 
+    /**
+     * Instantiates a new Widget linked hash map.
+     */
     public WidgetLinkedHashMap() {
         linkedMap = new HashMap<>();
         head = new WidgetEntry();
@@ -22,6 +28,12 @@ public class WidgetLinkedHashMap {
         tail.prev = head;
     }
 
+    /**
+     * Get widget.
+     *
+     * @param id the id
+     * @return the widget
+     */
     public Widget get(Long id) {
         if (linkedMap.containsKey(id)) {
             return linkedMap.get(id).value;
@@ -29,6 +41,12 @@ public class WidgetLinkedHashMap {
         return null;
     }
 
+    /**
+     * Put.
+     *
+     * @param id     the id
+     * @param widget the widget
+     */
     public void put(Long id, Widget widget) {
         WidgetEntry current;
         if (widget.getzIndex() != null) {
@@ -61,6 +79,11 @@ public class WidgetLinkedHashMap {
         linkedMap.put(id, current);
     }
 
+    /**
+     * Delete.
+     *
+     * @param id the id
+     */
     public void delete(Long id) {
         if (linkedMap.containsKey(id)) {
             WidgetEntry entry = linkedMap.get(id);
@@ -70,6 +93,11 @@ public class WidgetLinkedHashMap {
         }
     }
 
+    /**
+     * Gets widgets.
+     *
+     * @return the widgets
+     */
     public List<Widget> getWidgets() {
         List<Widget> result = new ArrayList<>();
         WidgetEntry temp = head.next;
@@ -107,15 +135,34 @@ public class WidgetLinkedHashMap {
     }
 
 
-
+    /**
+     * The type Widget entry.
+     */
     class WidgetEntry{
+        /**
+         * The Value.
+         */
         public Widget value;
+        /**
+         * The Next.
+         */
         public WidgetEntry next;
+        /**
+         * The Prev.
+         */
         public WidgetEntry prev;
 
+        /**
+         * Instantiates a new Widget entry.
+         */
         public WidgetEntry() {
         }
 
+        /**
+         * Instantiates a new Widget entry.
+         *
+         * @param value the value
+         */
         public WidgetEntry(Widget value) {
             this.value = value;
         }
