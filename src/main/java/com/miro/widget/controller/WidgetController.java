@@ -1,5 +1,6 @@
 package com.miro.widget.controller;
 
+import com.miro.widget.exception.MissingParameterException;
 import com.miro.widget.model.Widget;
 import com.miro.widget.exception.WidgetNotFoundException;
 import com.miro.widget.services.WidgetService;
@@ -69,16 +70,30 @@ public class WidgetController {
     /**
      * Gets widgets.
      *
-     * @param page the page
-     * @param size the size
+     * @param page   the page
+     * @param size   the size
+     * @param x      the x
+     * @param y      the y
+     * @param width  the width
+     * @param height the height
      * @return the widgets
      */
     @GetMapping()
     public ResponseEntity<Page<Widget>> getWidgets(
             @RequestParam(required = false, defaultValue ="1") @Min(value = 1, message = "page number should be positive") Integer page,
-            @RequestParam(required = false, defaultValue = "10") @Max(value = 500, message = "size should be less than or equal to 500") Integer size) {
+            @RequestParam(required = false, defaultValue = "10") @Max(value = 500, message = "size should be less than or equal to 500") Integer size,
+            @RequestParam(required = false) Double x,
+            @RequestParam(required = false) Double y,
+            @RequestParam(required = false) Double width,
+            @RequestParam(required = false) Double height) throws MissingParameterException {
 
-        Page<Widget> pageWidgets = widgetService.getWidgets(PageRequest.of(page - 1, size));
+        if (x != null || y != null || width != null || height != null) {
+            if (x == null || y == null || width == null || height == null) {
+                throw new MissingParameterException("x, y, width and height parameter should be provided together");
+            }
+        }
+
+        Page<Widget> pageWidgets = widgetService.getWidgets(PageRequest.of(page - 1, size), x, y, width, height);
         return new ResponseEntity(pageWidgets, HttpStatus.OK);
     }
 
@@ -132,6 +147,12 @@ public class WidgetController {
         }
 
         return ResponseEntity.badRequest().body(messages.toString());
+    }
+
+    @ExceptionHandler(value = {MissingParameterException.class})
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleMissingParameterException(MissingParameterException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
 

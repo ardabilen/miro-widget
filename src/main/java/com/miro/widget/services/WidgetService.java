@@ -66,22 +66,43 @@ public class WidgetService {
      * Gets widgets.
      *
      * @param pageable the pageable
+     * @param x
+     * @param y
+     * @param width
+     * @param height
      * @return the widgets
      */
-    public Page<Widget> getWidgets(Pageable pageable) {
+    public Page<Widget> getWidgets(Pageable pageable, Double x, Double y, Double width, Double height) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
+
+
+        // fetch sorted widgets
         List<Widget> widgets = widgetRepository.getWidgets();
-        List<Widget> result;
-        if (widgets.size() < startItem) {
-            result = Collections.emptyList();
-        } else {
-            int toIndex = Math.min(startItem + pageSize, widgets.size());
-            result = widgets.subList(startItem, toIndex);
+        List<Widget> filteredWidgets = null;
+        if (x != null && y != null && width != null && height != null) {
+            //fetch filtered widgets (unfortunately not sorted)
+            //if the number of filtered widgets are too small compared to number of all widgets
+            //sort operation might be applied.
+            filteredWidgets = widgetRepository.filterWidgets(x, x + width, y, y + height);
         }
 
-        Page<Widget> widgetPage = new PageImpl(result, PageRequest.of(currentPage, pageSize), widgets.size());
+        // if filter operation is applied and some widgets are filtered, continue with filteredWidgets
+        // otherwise continue with already sorted widgets.
+        List<Widget> paginatedWidgetList = widgets;
+        if(filteredWidgets != null && filteredWidgets.size() != widgets.size())
+            paginatedWidgetList = filteredWidgets;
+
+        List<Widget> result;
+        if (paginatedWidgetList.size() < startItem) {
+            result = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, paginatedWidgetList.size());
+            result = paginatedWidgetList.subList(startItem, toIndex);
+        }
+
+        Page<Widget> widgetPage = new PageImpl(result, PageRequest.of(currentPage, pageSize), paginatedWidgetList.size());
 
         return widgetPage;
     }

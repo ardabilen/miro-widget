@@ -45,4 +45,15 @@ public interface WidgetCrudRepository {
      * @param widget the widget
      */
     void update(Widget widget);
+
+    /**
+     * Filter widgets list.
+     *
+     * @param x1 the x 1
+     * @param x2 the x 2
+     * @param y1 the y 1
+     * @param y2 the y 2
+     * @return the list
+     */
+    List<Widget> filterWidgets(Double x1, Double x2, Double y1, Double y2);
 }

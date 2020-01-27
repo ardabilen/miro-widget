@@ -22,6 +22,21 @@ public class Widget {
     }
 
     /**
+     * Instantiates a new Widget.
+     *
+     * @param coordinates the coordinates
+     * @param zIndex      the z index
+     * @param width       the width
+     * @param height      the height
+     */
+    public Widget(Point2D.Double coordinates, Integer zIndex, Double width, Double height) {
+        this.coordinates = coordinates;
+        this.zIndex = zIndex;
+        this.width = width;
+        this.height = height;
+    }
+
+    /**
      * Gets id.
      *
      * @return the id
@@ -134,5 +149,17 @@ public class Widget {
      */
     public void increaseZIndex() {
         this.zIndex++;
+    }
+
+    /**
+     * Point value by dimension double.
+     *
+     * @param dimension the dimension
+     * @return the double
+     */
+    public Double pointValueByDimension(int dimension){
+        if(dimension == 0)
+            return coordinates.getX();
+        return coordinates.getY();
     }
 }

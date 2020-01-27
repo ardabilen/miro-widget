@@ -34,9 +34,7 @@ public class WidgetControllerIntegrationTest {
 
     @Test
     public void createWidget_shouldCreateNewWidget() throws Exception {
-        Widget expectedWidget = new Widget();
-        expectedWidget.setCoordinates(new Point2D.Double(10,20));
-        expectedWidget.setzIndex(55);
+        Widget expectedWidget = new Widget(new Point2D.Double(10.0,20.0), 55, 10.0, 15.0);
 
         Widget actualWidget = createWidget(expectedWidget);
 
@@ -55,9 +53,8 @@ public class WidgetControllerIntegrationTest {
 
     @Test
     public void getWidgetById_shouldReturnTheWidget() throws Exception {
-        Widget widget = new Widget();
-        widget.setCoordinates(new Point2D.Double(10,20));
-        widget.setzIndex(75);
+        Widget widget = new Widget(new Point2D.Double(10, 20), 75, 10.0, 20.0);
+
 
         Widget expectedWidget = createWidget(widget);
 
@@ -90,16 +87,13 @@ public class WidgetControllerIntegrationTest {
 
     @Test
     public void getWidgets_shouldReturnOrderedWidgets() throws Exception {
-        Widget widget1 = new Widget();
-        widget1.setzIndex(25);
+        Widget widget1 = new Widget(new Point2D.Double(10, 10), 25, 10.0, 20.0);
         createWidget(widget1);
 
-        Widget widget2 = new Widget();
-        widget1.setzIndex(23);
+        Widget widget2 = new Widget(new Point2D.Double(20, 20), 23, 10.0, 20.0);
         createWidget(widget2);
 
-        Widget widget3 = new Widget();
-        widget1.setzIndex(27);
+        Widget widget3 = new Widget(new Point2D.Double(30, 30), 27, 10.0, 20.0);
         createWidget(widget3);
 
         MvcResult result = mockMvc.perform(get("/widgets")
@@ -126,9 +120,7 @@ public class WidgetControllerIntegrationTest {
     @Test
     public void updateWidget_shouldUpdateWidget() throws Exception {
 
-        Widget widget = new Widget();
-        widget.setHeight(100.0);
-        widget.setWidth(100.0);
+        Widget widget = new Widget(new Point2D.Double(10, 10), 33, 100.0, 100.0);
         Widget widgetToBeUpdated = createWidget(widget);
 
         Widget updatedWidget = new Widget();
@@ -150,7 +142,7 @@ public class WidgetControllerIntegrationTest {
 
     @Test
     public void deleteWidget_shouldDeleteWidget() throws Exception {
-        Widget widget = new Widget();
+        Widget widget = new Widget(new Point2D.Double(10, 10), 44, 10.0, 20.0);
         Widget widgetToBeDeleted = createWidget(widget);
 
         mockMvc.perform(delete("/widgets/{$id}", widgetToBeDeleted.getId())
@@ -165,16 +157,13 @@ public class WidgetControllerIntegrationTest {
     @Test
     public void createWidget_shouldShiftWidgetsWithTheSameAndGreaterIndexUpwards_whenIndexAlreadyExist() throws Exception {
 
-        Widget widget1 = new Widget();
-        widget1.setzIndex(15);
+        Widget widget1 = new Widget(new Point2D.Double(10, 10), 15, 10.0, 20.0);
         Widget createdWidget1 = createWidget(widget1);
 
-        Widget widget2 = new Widget();
-        widget2.setzIndex(16);
+        Widget widget2 = new Widget(new Point2D.Double(10, 20), 16, 10.0, 20.0);
         Widget createdWidget2 = createWidget(widget2);
 
-        Widget widget3 = new Widget();
-        widget3.setzIndex(15);
+        Widget widget3 = new Widget(new Point2D.Double(10, 20), 15, 10.0, 20.0);
         Widget createdWidget3 = createWidget(widget3);
 
         MvcResult result1 = mockMvc.perform(get("/widgets/{id}", createdWidget1.getId())
@@ -210,11 +199,11 @@ public class WidgetControllerIntegrationTest {
         // when it is the case, I assume that zIndex should be equal to highest zIndex + 1
         // if there is no highest zIndex, then it will be equal to 0;
 
-        Widget widget1 = new Widget();
-        widget1.setzIndex(100);
+        Widget widget1 = new Widget(new Point2D.Double(10, 10), 100, 10.0, 20.0);
         Widget createdWidget1 = createWidget(widget1);
 
         Widget widget2 = new Widget();
+        widget2.setCoordinates(new Point2D.Double(20.0,10.0));
         Widget createdWidget2 = createWidget(widget2);
 
 

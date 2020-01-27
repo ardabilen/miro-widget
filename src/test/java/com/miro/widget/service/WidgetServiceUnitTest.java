@@ -64,7 +64,7 @@ public class WidgetServiceUnitTest {
     @Test
     public void getWidgets_shouldReturnEmptyList() {
         Mockito.doReturn(Collections.emptyList()).when(widgetCrudRepository).getWidgets();
-        Page<Widget> actualWidgetPage = widgetService.getWidgets(PageRequest.of(1, 10));
+        Page<Widget> actualWidgetPage = widgetService.getWidgets(PageRequest.of(1, 10), 0.0, 0.0, 0.0, 0.0);
         Assert.assertEquals(0,actualWidgetPage.getTotalElements());
     }
 
@@ -75,7 +75,7 @@ public class WidgetServiceUnitTest {
         widgets.add(new Widget());
 
         Mockito.doReturn(widgets).when(widgetCrudRepository).getWidgets();
-        Page<Widget> actualWidgetPage = widgetService.getWidgets(PageRequest.of(0, 1));
+        Page<Widget> actualWidgetPage = widgetService.getWidgets(PageRequest.of(0, 1), null, null, null, null);
         Assert.assertEquals(1, actualWidgetPage.getNumberOfElements());
         Assert.assertEquals(2, actualWidgetPage.getTotalElements());
         Assert.assertEquals(2, actualWidgetPage.getTotalPages());
