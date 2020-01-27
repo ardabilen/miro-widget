@@ -1,7 +1,7 @@
 # miro-widget
 
 ## Summary
-A web service (HTTP REST API) to work with widgets.
+A web service (HTTP REST API) to work with widgets.\
 2D Binary Search Tree and Range Query Algorithm Implementation
 
 ## Swagger
